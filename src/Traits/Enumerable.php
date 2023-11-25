@@ -26,9 +26,9 @@ trait Enumerable
         $this->verifyClass();
         
         /**
-         * @var Mapping $this
+         * @var MappingCollection $collection
          */
-        $collection = $this->collection();
+        $collection = $this->items;
         
         return $collection->each($callback);
     }
@@ -41,24 +41,9 @@ trait Enumerable
         $this->verifyClass();
         
         /**
-         * @var Mapping $this
+         * @var MappingCollection $collection
          */
-        $collection = $this->collection();
-        
-        return $collection->map($callback);
-    }
-
-    /**
-     * @param Closure(string $from, mixed $to): array<string, mixed> $callback
-     */
-    public function mapWithKeys(Closure $callback): MappingCollection
-    {
-        $this->verifyClass();
-        
-        /**
-         * @var Mapping $this
-         */
-        $collection = $this->collection();
+        $collection = $this->items;
         
         return $collection->map($callback);
     }
@@ -71,9 +56,9 @@ trait Enumerable
         $this->verifyClass();
         
         /**
-         * @var Mapping $this
+         * @var MappingCollection $collection
          */
-        $collection = $this->collection();
+        $collection = $this->items;
         
         return $collection->filter($callback);
     }

@@ -12,7 +12,7 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
 {
     private array $data;
 
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], private string $class)
     {
         $this->pushAll($data);
     }
@@ -54,45 +54,10 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
         $result = [];
         
         foreach ($this->data as $from => $to) {
-            $result[] = $callback($from, $to);
+            $result[$from] = $callback($from, $to);
         }
 
-        return new self($result);
-    }
-
-    /**
-     * @param Closure(string $from, mixed $to): array<string, mixed> $callback
-     */
-    public function mapWithKeys(Closure $callback): self
-    {
-        $result = [];
-
-        $i = 0;
-        
-        foreach ($this->data as $from => $to) {
-            $return = $callback($from, $to);
-
-            if($i === 0) {
-                $this->verifyMapWithKeys($return);
-            }
-
-            $result[key($return)] = current($return);
-            
-            $i++;
-        }
-
-        return new self($result);
-    }
-
-    private function verifyMapWithKeys($return): void
-    {
-        if(!is_array($return)) {
-            throw new MappingException('Incorrect mapWithKeys(...) in '. static::class .'.');
-        }
-
-        if(count($return) !== 1) {
-            throw new MappingException('Incorrect mapWithKeys(...) in '. static::class .'.');
-        }
+        return new self($result, $this->class);
     }
 
     /**
@@ -108,7 +73,7 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
             }
         }
 
-        return new self($result);
+        return new self($result, $this->class);
     }
 
     /**Iterator */
@@ -147,9 +112,9 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
 
     /** ArrayAccess */
 
-    public function offsetSet($offset, $to): void
+    public function offsetSet($offset, $value): void
     {
-        throw new MappingException("You can't add or change property in ". static::class .'.');
+        throw new MappingException("You can't add or change property in {$this->class}.");
     }
     
     public function offsetExists($offset): bool
@@ -159,15 +124,15 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
     
     public function offsetUnset($offset): void
     {
-        throw new MappingException("You can't remove property in ". static::class .'.');
+        throw new MappingException("You can't remove property in {$this->class}.");
     }
     
     public function offsetGet($offset): mixed
     {
-        if(!$this->offsetExists($offset)) {
-            throw new MappingException("Property \"{$offset}\" does not exist in ". static::class .'.');
+        if($this->offsetExists($offset)) {
+            return $this->data[$offset];
         }
-    
-        return $this->data[$offset];
+
+        throw new MappingException("Property \"{$offset}\" does not exist in {$this->class}.");
     }
 }

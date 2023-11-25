@@ -14,6 +14,8 @@ $example = new class extends Mapping {
     public const c = 1.5;
 };
 
+$example->b = 1;
+
 dd($example->map(function ($from, $to) {
     dump($from);
     

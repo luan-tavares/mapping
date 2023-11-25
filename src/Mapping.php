@@ -6,6 +6,7 @@ use Countable;
 use DomainException;
 use IteratorAggregate;
 use JsonSerializable;
+use LTL\Mapping\Exceptions\MappingException;
 use LTL\Mapping\MappingCollection;
 use LTL\Mapping\Traits\Enumerable;
 use ReflectionClass;
@@ -21,7 +22,17 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
     {
         $constants = (new ReflectionClass($this))->getConstants(ReflectionClassConstant::IS_PUBLIC);
 
-        $this->items = new MappingCollection($constants);
+        $this->items = new MappingCollection($constants, static::class);
+    }
+
+    public function __get($name)
+    {
+        throw new MappingException('You can not access public property in '. static::class .'.');
+    }
+
+    public function __set($name, $value)
+    {
+        throw new MappingException('You can not change or create public property in '. static::class .'.');
     }
 
     public function collection(): MappingCollection
@@ -52,25 +63,22 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
 
     public function offsetSet($key, $value): void
     {
+        $this->items->offsetSet($key, $value);
     }
 
     public function offsetUnset($key): void
     {
+        $this->items->offsetUnset($key);
     }
 
     public function offsetExists($key): bool
     {
-        return isset($this->items[$key]);
+        return $this->items->offsetExists($key);
     }
 
     public function offsetGet($key): string
     {
-        if($this->offsetExists($key)) {
-            return $this->items[$key];
-        }
-
-        throw new DomainException('"'. static::class ."::{$key}\" is not mapped");
-        
+        return $this->items->offsetGet($key);
     }
 
     /** IteratorAggregate */
@@ -91,6 +99,6 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
 
     public function jsonSerialize(): array
     {
-        return $this->items->all();
+        return $this->getAll();
     }
 }
