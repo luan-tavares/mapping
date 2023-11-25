@@ -3,7 +3,6 @@ namespace LTL\Mapping;
 
 use ArrayAccess;
 use Countable;
-use DomainException;
 use IteratorAggregate;
 use JsonSerializable;
 use LTL\Mapping\Exceptions\MappingException;

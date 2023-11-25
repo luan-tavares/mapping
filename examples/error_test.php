@@ -9,15 +9,14 @@ use LTL\Mapping\Mapping;
 $example = new class extends Mapping {
     public const a = 'Teste';
 
-    public const b = 52;
+    public const b = null;
 
     public const c = 1.5;
 };
 
-$example->b = 1;
 
-dd($example->map(function ($from, $to) {
-    dump($from);
-    
+dd($example->filter(function ($from, $to) {
+    return !is_null($to);
+})->map(function ($from, $to) {
     return '----' . $to;
 }));

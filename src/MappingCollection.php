@@ -12,7 +12,7 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
 {
     private array $data;
 
-    public function __construct(array $data = [], private string $class)
+    public function __construct(array $data, private string $class)
     {
         $this->pushAll($data);
     }
