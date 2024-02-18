@@ -14,6 +14,8 @@ $example = new class extends Mapping {
     public const c = 1.5;
 };
 
+dd($example);
+
 
 dd($example->filter(function ($from, $to) {
     return !is_null($to);

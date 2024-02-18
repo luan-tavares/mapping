@@ -21,7 +21,7 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
     {
         $constants = (new ReflectionClass($this))->getConstants(ReflectionClassConstant::IS_PUBLIC);
 
-        $this->items = new MappingCollection($constants, static::class);
+        $this->items = new MappingCollection($constants, static::class, true);
     }
 
     public function __get($name)

@@ -12,8 +12,15 @@ class MappingCollection implements Countable, Iterator, ArrayAccess
 {
     private array $data;
 
-    public function __construct(array $data, private string $class)
+    public function __construct(array $data, private string $class, bool $first = false)
     {
+        if($first) {
+            foreach ($data as $from => $to) {
+                $this->data[$from] = $to ?? $from;
+            }
+
+            return;
+        }
         $this->pushAll($data);
     }
 
