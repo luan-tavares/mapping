@@ -51,6 +51,20 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
         return $self->getAll();
     }
 
+    public static function keys(): array
+    {
+        $self = new static;
+        
+        return array_keys($self->getAll());
+    }
+
+    public static function values(): array
+    {
+        $self = new static;
+        
+        return array_values($self->getAll());
+    }
+
     public static function value(string $key): string
     {
         $self = new static;
