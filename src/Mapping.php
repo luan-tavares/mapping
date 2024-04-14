@@ -22,7 +22,9 @@ abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, Jso
     public function __construct()
     {
         if(isset($this->data)) {
-            $this->items = new MappingCollection($this->data, static::class, true);
+            $data = $this->data;
+            unset($this->data);
+            $this->items = new MappingCollection($data, static::class, true);
 
             return;
         }

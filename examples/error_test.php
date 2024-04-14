@@ -14,7 +14,7 @@ $example = new class extends Mapping {
     public const c = 1.5;
 };
 
-dd($example);
+dd($example::a);
 
 
 dd($example->filter(function ($from, $to) {
