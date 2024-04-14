@@ -14,11 +14,19 @@ use ReflectionClassConstant;
 abstract class Mapping implements IteratorAggregate, ArrayAccess, Countable, JsonSerializable
 {
     use Enumerable;
+
+    protected array $data;
     
     protected MappingCollection $items;
 
     public function __construct()
     {
+        if(isset($this->data)) {
+            $this->items = new MappingCollection($this->data, static::class, true);
+
+            return;
+        }
+
         $constants = (new ReflectionClass($this))->getConstants(ReflectionClassConstant::IS_PUBLIC);
 
         $this->items = new MappingCollection($constants, static::class, true);
